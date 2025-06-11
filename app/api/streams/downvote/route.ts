@@ -9,6 +9,7 @@ const DownVoteSchema = z.object({
 })
 
 export async function POST(req : NextRequest) {
+    console.log("downvote from the server")
     const session = await getServerSession();
     // TODO - We can get rid of the DB call 
     const user = prisma.user.findFirst({

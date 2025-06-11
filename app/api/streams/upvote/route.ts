@@ -9,9 +9,10 @@ const UpVoteSchema = z.object({
 })
 
 export async function POST(req : NextRequest) {
-
+    console.log("upvote form the server")
     const session = await getServerSession();
 
+    console.log(session)
     // TODO - We can get rid of the DB call 
     const user = prisma.user.findFirst({
         where : {
@@ -27,7 +28,9 @@ export async function POST(req : NextRequest) {
         })
     }
     try{
+        
         const data = UpVoteSchema.parse(await req.json());
+        console.log("inside try catch")
         await prisma.upvotes.create({
             data :{
                 //@ts-ignore
@@ -35,7 +38,12 @@ export async function POST(req : NextRequest) {
                 streamId : data.StreamId
             }
         })
+
+        return NextResponse.json({
+            message : "Upvote done"
+        })
     }catch(e){
+        console.log("inside catch block")
         return NextResponse.json({
             message : "Error while upvoting"
         },{

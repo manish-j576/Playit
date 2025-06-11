@@ -5,16 +5,24 @@ import {z} from 'zod'
 import youtubesearchapi  from "youtube-search-api"
 const YT_REGEX = /^https:\/\/(www\.)?youtube\.com\/watch\?v=[\w-]{11}(&t=\d+s)?$/
 const StreamSchema = z.object({
-    createrId : z.string(),
+    email : z.string(),
     url : z.string()
 })
 
 export async function POST(req:NextRequest) {
+    console.log("backend reached")
     try{
 
         const data = StreamSchema.parse(await req.json())
         const url = data.url
-        const createrId = data.createrId
+        const createrEmail = data.email //
+        //fetching Creater iD from username
+        const user = await prisma.user.findFirst({
+            where : {
+                email : createrEmail
+            }
+        })
+        const createrId = user?.id
         const isYT = YT_REGEX.test(url)
         if(!isYT){
             return NextResponse.json({
@@ -31,6 +39,7 @@ export async function POST(req:NextRequest) {
         const bigImgURL = `https://img.youtube.com/vi/${extractedId}/0.jpg `
         
         const stream = await prisma.stream.create({
+            //@ts-ignore
             data:{
                 userId : createrId,
                 url : url,
@@ -44,7 +53,7 @@ export async function POST(req:NextRequest) {
         return NextResponse.json({
             message : "Stream added successfully",
             id : stream.id
-        })
+        },{status : 200})
     }catch(e){
         return NextResponse.json({
             message : "Error while adding a stream"
@@ -56,10 +65,19 @@ export async function POST(req:NextRequest) {
 }
    
 export async function GET(req:NextRequest) {
-    const createId = req.nextUrl.searchParams.get("createrId")
+
+    const createrEmail = req.nextUrl.searchParams.get("email")
+    
+
+        const user = await prisma.user.findFirst({
+            where : {
+                //@ts-ignore
+                email : createrEmail
+            }
+        })
     const streams = await prisma.stream.findMany({
         where : {
-            userId : createId ?? ""
+            userId : user?.id ?? ""
         }
     })
     console.log(streams)
