@@ -11,15 +11,14 @@ const UpVoteSchema = z.object({
 export async function POST(req : NextRequest) {
     console.log("upvote form the server")
     const session = await getServerSession();
-
-    console.log(session)
     // TODO - We can get rid of the DB call 
-    const user = prisma.user.findFirst({
+    const user = await prisma.user.findFirst({
         where : {
             email : session?.user?.email ?? ""
         }
     })
-
+    console.log("user is :" )
+    console.log(user)
     if(!user){
         return NextResponse.json({
             message : "Unauthenticated"
@@ -28,9 +27,10 @@ export async function POST(req : NextRequest) {
         })
     }
     try{
-        
         const data = UpVoteSchema.parse(await req.json());
         console.log("inside try catch")
+        console.log("user ID  : ", user.id)
+        console.log("streamID : ",data.StreamId)
         await prisma.upvotes.create({
             data :{
                 //@ts-ignore
@@ -38,7 +38,8 @@ export async function POST(req : NextRequest) {
                 streamId : data.StreamId
             }
         })
-
+        console.log("data base entry occred");
+        
         return NextResponse.json({
             message : "Upvote done"
         })

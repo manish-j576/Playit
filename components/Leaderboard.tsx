@@ -5,6 +5,7 @@ import { Button } from "./ui/button"
 import { useEffect, useState } from "react"
 import axios from "axios"
 import { useSession } from "next-auth/react"
+import { Votes } from "./Votes"
 
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL
@@ -78,7 +79,7 @@ export default function Leaderboard(){
                       >
                         <ThumbsUp className="h-4 w-4" />
                       </Button>
-                      <span className="font-medium text-sm">{song.upvote}</span>
+                      <Votes></Votes>
                       <Button
                         size="sm"
                         variant="ghost"
