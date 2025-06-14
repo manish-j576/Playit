@@ -37,18 +37,15 @@ export default function Leaderboard(){
     async function handleUpvote(song : any){
         console.log("upvoted pressed")
         const response = await axios.post(`${BACKEND_URL}/streams/upvote`,{
-            
                 StreamId : song.id
-            
         })
     }
     async function handleDownvote(song : any){
         console.log("downvotes pressed")
-        const response = await axios.post(`${BACKEND_URL}/streams/downvote`,{
-            data : {
-                StreamId : song.id
+        const response = await axios.post(`${BACKEND_URL}/streams/downvote`, {
+                streamId : song.id
             }
-        })
+        )
     }
     return <Card className="bg-gray-900/50 border-gray-800 text-white">
               <CardHeader className="pb-3">
@@ -79,7 +76,7 @@ export default function Leaderboard(){
                       >
                         <ThumbsUp className="h-4 w-4" />
                       </Button>
-                      <Votes></Votes>
+                      <Votes streamId={song.id}></Votes>
                       <Button
                         size="sm"
                         variant="ghost"
