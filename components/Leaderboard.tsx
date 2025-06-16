@@ -14,8 +14,6 @@ export default function Leaderboard(){
 
     const [songsList , setSongsList] = useState([])
     const session = useSession()
-    console.log("session")
-    console.log(session)
     async function getStreams() {
         console.log(session)
         try{

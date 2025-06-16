@@ -27,50 +27,8 @@ import Image from "next/image"
 import axios from "axios"
 import AddSongCard from "@/components/AddSongCard"
 import Leaderboard from "@/components/Leaderboard"
-
-// Mock data for demonstration
-const songs = [
-  {
-    id: 1,
-    title: "Bohemian Rhapsody",
-    artist: "Queen",
-    votes: 247,
-    thumbnail: "/placeholder.svg?height=80&width=120",
-    duration: "5:55",
-  },
-  {
-    id: 2,
-    title: "Hotel California",
-    artist: "Eagles",
-    votes: 198,
-    thumbnail: "/placeholder.svg?height=80&width=120",
-    duration: "6:30",
-  },
-  {
-    id: 3,
-    title: "Stairway to Heaven",
-    artist: "Led Zeppelin",
-    votes: 156,
-    thumbnail: "/placeholder.svg?height=80&width=120",
-    duration: "8:02",
-  },
-  {
-    id: 4,
-    title: "Sweet Child O' Mine",
-    artist: "Guns N' Roses",
-    votes: 142,
-    thumbnail: "/placeholder.svg?height=80&width=120",
-    duration: "5:56",
-  },
-  {
-    id: 5,
-    title: "Smells Like Teen Spirit",
-    artist: "Nirvana",
-    votes: 137,
-    thumbnail: "/placeholder.svg?height=80&width=120",
-    duration: "5:01",
-  },
-]
+import DashboardNavbar from "@/components/DashboardNavbar"
+import CurrentPlaying from "@/components/CurrentPlaying"
 
 
 
@@ -78,8 +36,8 @@ const songs = [
 export default function Dashboard() {
   const [youtubeLink, setYoutubeLink] = useState("")
   const [isPlaying, setIsPlaying] = useState(true)
-  const [songsList, setSongsList] = useState(songs)
-  // const [songsList , setSongsList] = useState([])
+  // const [songsList, setSongsList] = useState(songs)
+  const [songsList , setSongsList] = useState([])
   const currentSong = songsList[0]
   const [shareUrl, setShareUrl] = useState("")
   const [copied, setCopied] = useState(false)
@@ -93,22 +51,6 @@ export default function Dashboard() {
     console.log("Submitted YouTube link:", youtubeLink)
     setYoutubeLink("")
     // In a real app, you would parse the YouTube link and add the song to the list
-  }
-
-  const handleVote = (id: number, voteType: "up" | "down") => {
-    setSongsList((prevSongs) =>
-      prevSongs
-        .map((song) => {
-          if (song.id === id) {
-            return {
-              ...song,
-              votes: voteType === "up" ? song.votes + 1 : song.votes - 1,
-            }
-          }
-          return song
-        })
-        .sort((a, b) => b.votes - a.votes),
-    )
   }
 
   const handlePlayNext = () => {
@@ -150,110 +92,23 @@ export default function Dashboard() {
       console.log("Failed to copy:", error)
     }
   }
-// async function getStreams() {
-//     const res = await axios.get("/api/my")
-//     const data = (res.data.streams)
-//     setSongsList(data)
-// }
-
-//   useEffect(()=>{
-
-//     getStreams();
-
-//   },[])
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-950 text-white">
-      <header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-800 sticky top-0 z-10 bg-gray-950/95 backdrop-blur-sm">
-        <Link href="/" className="flex items-center justify-center gap-2">
-          <div className="bg-gradient-to-r from-purple-500 to-pink-500 p-1.5 rounded-lg">
-            <Music className="h-5 w-5 text-white" />
-          </div>
-          <span className="text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            PlayIt
-          </span>
-        </Link>
-        <nav className="ml-auto flex gap-2 sm:gap-6 items-center">
-          <Link href="/dashboard" className="text-sm font-medium text-purple-400 transition-colors">
-            Dashboard
-          </Link>
-          <Link href="/discover" className="text-sm font-medium hover:text-purple-400 transition-colors">
-            Discover
-          </Link>
-          <Link href="/rooms" className="text-sm font-medium hover:text-purple-400 transition-colors">
-            Rooms
-          </Link>
-          <Avatar className="h-8 w-8 border border-purple-500">
-            <div className="bg-gradient-to-r from-purple-600 to-pink-600 h-full w-full flex items-center justify-center text-xs font-medium">
-              JD
-            </div>
-          </Avatar>
-        </nav>
-      </header>
-
+      <DashboardNavbar></DashboardNavbar>
       <main className="flex-1 container max-w-7xl mx-auto px-4 py-6 ">
         <div className="grid gap-6 md:grid-cols-[1fr_300px] lg:grid-cols-[1fr_350px]">
           <div className="space-y-6">
             {/* YouTube Link Input */}
             <AddSongCard></AddSongCard>
-            
             {/* Leaderboard */}
             <Leaderboard></Leaderboard>
-            <Card className="bg-gray-900/50 border-gray-800 text-white">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <CardTitle className="text-xl">Song Leaderboard</CardTitle>
-                    <CardDescription>Vote for the songs you want to hear next</CardDescription>
-                  </div>
-                  <Badge variant="secondary" className="bg-purple-900/50 text-purple-300 border-purple-700">
-                    <Users className="h-3 w-3 mr-1" />
-                    12 Listeners
-                  </Badge>
-                </div>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {songsList.map((song) => (
-                  <div key={song.id} className="flex items-center gap-3 p-2 bg-gray-800/50 rounded-lg">
-                    <div className="relative h-20 w-[120px] rounded-md overflow-hidden flex-shrink-0">
-                      <Image
-                        src={song.thumbnail || "/placeholder.svg"}
-                        alt={song.title}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-medium text-white truncate">{song.title}</h3>
-                    </div>
-                    <div className="flex flex-col items-center gap-1">
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 p-0 text-green-400 hover:text-green-300 hover:bg-green-900/20"
-                        onClick={() => handleVote(song.id, "up")}
-                      >
-                        <ThumbsUp className="h-4 w-4" />
-                      </Button>
-                      <span className="font-medium text-sm">{song.votes}</span>
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-8 w-8 p-0 text-red-400 hover:text-red-300 hover:bg-red-900/20"
-                        onClick={() => handleVote(song.id, "down")}
-                      >
-                        <ThumbsDown className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
           </div>
 
           {/* Current Playing and Sidebar */}
-          <div className="space-y-6">
-            {/* Now Playing */}
+          <CurrentPlaying></CurrentPlaying>
+          {/* <div className="space-y-6">
+            Now Playing
             <Card className="bg-gray-900/50 border-gray-800 text-white">
               <CardHeader className="pb-3">
                 <CardTitle className="text-xl">Now Playing</CardTitle>
@@ -321,7 +176,7 @@ export default function Dashboard() {
               </CardFooter>
             </Card>
 
-            {/* Room Info */}
+            Room Info
             <Card className="bg-gray-900/50 border-gray-800 text-white">
               <CardHeader className="pb-3">
                 <CardTitle className="text-xl">Room Info</CardTitle>
@@ -374,7 +229,7 @@ export default function Dashboard() {
                 </Button>
               </CardFooter>
             </Card>
-          </div>
+          </div> */}
         </div>
       </main>
 

@@ -1,11 +1,11 @@
-import Navbar from "./components/Navbar";
+import Navbar from "../components/Navbar";
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Music, Users, Trophy, ThumbsUp, Play, Headphones, Radio, Star, ArrowUp, ArrowDown } from "lucide-react"
 import Link from "next/link"
  import { Button } from "@/components/ui/button"
-import { Redirect } from "./components/Redirect";
+import { Redirect } from "../components/Redirect";
 export default function Home() {
   return <div>
     <Navbar></Navbar>
