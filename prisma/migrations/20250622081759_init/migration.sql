@@ -2,12 +2,13 @@
 CREATE TYPE "StreamType" AS ENUM ('Spotify', 'Youtube');
 
 -- CreateEnum
-CREATE TYPE "Provider" AS ENUM ('Google');
+CREATE TYPE "Provider" AS ENUM ('Google', 'Credentials');
 
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "hashedpassword" TEXT,
     "provider" "Provider" NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -19,8 +20,13 @@ CREATE TABLE "User" (
 CREATE TABLE "Stream" (
     "id" TEXT NOT NULL,
     "type" "StreamType" NOT NULL,
+    "url" TEXT NOT NULL,
+    "extractedID" TEXT NOT NULL,
+    "title" TEXT NOT NULL DEFAULT 'Error finding title',
+    "smallImgURL" TEXT NOT NULL DEFAULT '',
+    "bigImgURL" TEXT NOT NULL DEFAULT '',
     "active" BOOLEAN NOT NULL DEFAULT true,
-    "upvote" INTEGER NOT NULL,
+    "upvote" INTEGER NOT NULL DEFAULT 0,
     "userId" TEXT NOT NULL,
 
     CONSTRAINT "Stream_pkey" PRIMARY KEY ("id")

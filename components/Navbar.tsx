@@ -3,9 +3,11 @@ import { Button } from "@/components/ui/button";
 import { Music } from "lucide-react";
 import { signIn, signOut, useSession } from "next-auth/react";
 import Link from "next/link"
+import { useRouter } from "next/navigation";
 
 export default function Navbar(){
     const session = useSession()
+    const router = useRouter()
     return <div className="flex flex-col  bg-gray-950 text-white">
 <header className="px-4 lg:px-6 h-16 flex items-center border-b border-gray-800">
         <Link href="/" className="flex items-center justify-center gap-2">
@@ -35,7 +37,7 @@ export default function Navbar(){
           >
             Community
           </Link><div>
-           {session.status === "unauthenticated" &&<Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" onClick={()=>signIn()}>Signin</Button>}
+           {session.status === "unauthenticated" &&<Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" onClick={()=>router.push("/login")}>Signin</Button>}
            {session.status === "authenticated" &&<Button className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700" onClick={()=>signOut()}>Logout</Button>}
 
         </div>
